@@ -1,4 +1,4 @@
-# pairwise-alignment
+# pairwise-sequence-alignment (psa)
 
 This is a Python module to calculate a pairwise alignment between biological sequences (protein or nucleic acid). This module uses the [needle](https://www.ebi.ac.uk/Tools/psa/emboss_needle/) and [water](https://www.ebi.ac.uk/Tools/psa/emboss_water/) tools from the EMBOSS package to calculate an optimal, global/local pairwise alignment.
 
@@ -8,6 +8,7 @@ I wrote this module for two reasons. First, the needle and water tools are faste
 
 * [Introduction](#introduction)
 * [Requirements](#requirements)
+* [Installation](#installation)
 * [Quick Start](#quick-start)
 * [Alignment object](#alignment-object)
    * [Attributes](#attributes)
@@ -41,18 +42,35 @@ Pairwise sequence alignment is used to identify regions of similarity that may i
     > Check with `needle -version` or `water -version`.
 
 
+## Installation
+
+You can install the module from [PyPI](https://pypi.org/project/pairwise-sequence-alignment/):
+
+```
+pip install pairwise-sequence-alignment
+```
+
+or directly from GitHub:
+
+```
+pip install "git+https://github.com/aziele/pairwise-sequence-alignment.git"
+```
+
+or you can use the module without installation. Simply clone or download this repository and you're ready to use it.
+
+
 ## Quick Start
 
 ```python
-import pairwise_alignment as pa
+import psa
 
 # Global alignment
-aln = pa.needle(moltype='nucl', qseq='ATGCTAGTA', sseq='ATGCTAGTAGATGATGA')
-aln = pa.needle(moltype='prot', qseq='MKSTVWSG', sseq='MKSSVLW')
+aln = psa.needle(moltype='nucl', qseq='ATGCTAGTA', sseq='ATGCTAGTAGATGATGA')
+aln = psa.needle(moltype='prot', qseq='MKSTVWSG', sseq='MKSSVLW')
 
 # Local alignment
-aln = pa.water(moltype='nucl', qseq='ATGCTAGTA', sseq='ATGCTAGTAGATGATGAT')
-aln = pa.water(moltype='prot', qseq='MKSTVWSG', sseq='MKSSVLW')
+aln = psa.water(moltype='nucl', qseq='ATGCTAGTA', sseq='ATGCTAGTAGATGATGAT')
+aln = psa.water(moltype='prot', qseq='MKSTVWSG', sseq='MKSSVLW')
 
 print(aln.score)       # 20.0
 print(aln.pidentity)   # 71.4
@@ -109,9 +127,9 @@ print(aln.sseq)        # MKSSVLW
 ### Alignment information
 
 ```python
-import pairwise_alignment as pa
+import psa
 
-aln = pa.needle(
+aln = psa.needle(
     moltype='prot',
     qseq='MTSPSTKNSDDKGRPNLSSTEYFANTNVLTCRLKWVNPDTFIMDPRKPQLHSRT',
     sseq='MTTPSRENSDDKGRPIEEASNLSSTEYFANTNVLTCKLKYVNPDTFIMDPRKP',
@@ -261,9 +279,9 @@ Output:
 Query coverage describes how much of the query sequence is covered in the alignment by the subject sequence. Specifically, query coverage is the percentage of the query sequence length that is included in the alignment. In global alignments, query coverage is always 100% because both the sequences, query and subject, are aligned from end to end. It is thus more useful to calculate query coverage from local alignments.
 
 ```python
-import pairwise_alignment as pa
+import psa
 
-aln = pa.water(
+aln = psa.water(
     moltype='prot',
     qseq='MTSPSTKNSDDKGRPNLSSTEYFANTNVLTCRLKWVNPDTFIMDPRKPQLHSRT',
     sseq='NSDDKGRPIEEASNLSSTEYFANTNVLTCKLKYVNPDTFIMDPRKP',
@@ -285,9 +303,9 @@ print(aln.subject_coverage())
 You can change a scoring matrix and penalties for the gap open and extension to calculate the alignment.
 
 ```python
-import pairwise_alignment as pa
+import psa
 
-aln = pa.water(
+aln = psa.water(
     moltype='prot',
     qseq='MKSTWYERNST',
     sseq='MKSTGYWTRESA',
@@ -335,9 +353,9 @@ The Needleman-Wunsch and Smith-Waterman algorithms will always find an optimal a
 The `.pvalue()` method calculates the *P*-value of the alignment between query and subject sequences. The method shuffles a subject sequence many times (100 by default) and calculates the alignment score between the query and each shuffled subject sequence. It then counts how many times the alignment score was greater than or equal to the alignment score of the original query and subject sequences. For example, if 100 such shuffles all produce alignment scores that are lower than the observed alignment score, then one can say that the *P*-value is likely to be less than 0.01.
 
 ```python
-import pairwise_alignment as pa
+import psa
 
-aln = pa.needle(moltype='prot', qseq='MKSTVILK', sseq='MKSRSLK')
+aln = psa.needle(moltype='prot', qseq='MKSTVILK', sseq='MKSRSLK')
 
 print(aln.pvalue())   # 0.16
 ```
@@ -349,7 +367,7 @@ For more than two sequences, you can calculate alignments between every pair of 
 
 ```python
 import itertools
-import pairwise_alignment as pa
+import psa
 
 # Input sequences
 sequences = {
@@ -364,7 +382,7 @@ sequences = {
 for qid, sid in itertools.combinations(sequences, r=2):
     qseq = sequences[qid]
     sseq = sequences[sid]
-    aln = pa.needle(moltype='nucl', qseq=qseq, sseq=sseq)
+    aln = psa.needle(moltype='nucl', qseq=qseq, sseq=sseq)
     print(f'{qid} {sid} {aln.pidentity:.1f}% {aln.score}')
 ```
 
@@ -389,7 +407,7 @@ If you have multiple sequences in a FASTA file, you can use [Biopython](https://
 
 ```python
 import itertools
-import pairwise_alignment as pa
+import psa
 
 from Bio import SeqIO
 
@@ -402,7 +420,7 @@ for seq_record in SeqIO.parse('sequences.fasta', 'fasta'):
 for qid, sid in itertools.combinations(sequences, r=2):
     qseq = sequences[qid]
     sseq = sequences[sid]
-    aln = pa.needle(moltype='nucl', qseq=qseq, sseq=sseq)
+    aln = psa.needle(moltype='nucl', qseq=qseq, sseq=sseq)
     print(f'{qid} {sid} {aln.pidentity:.1f}% {aln.score}')
 ```
 
@@ -423,10 +441,10 @@ dna4  dna5  40.9%  14.0
 
 
 ## Tests
-This module contains automated tests. If you want to check that everything works as intended, just run:
+If you want to check that everything works as intended, just run:
 
 ```
-python3 pairwise_alignment.py
+./test.py
 ```
 
 ## License
