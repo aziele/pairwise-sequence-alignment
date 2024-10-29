@@ -10,6 +10,7 @@ class Test(unittest.TestCase):
     def test_is_emboss_installed(self):
         self.assertIsNotNone(shutil.which('needle'))
         self.assertIsNotNone(shutil.which('water'))
+        self.assertIsNotNone(shutil.which('stretcher'))
 
     def test_needle_dna(self):
         aln = psa.needle(moltype='nucl', qseq='ATGCTAGATA', sseq='ATGCTAGTTA')
@@ -20,6 +21,11 @@ class Test(unittest.TestCase):
         aln = psa.water(moltype='nucl', qseq='ATGCTAGTTA', sseq='ATCCT')
         self.assertEqual(len(aln.qaln), len(aln.saln))
         self.assertEqual(len(aln.qaln), aln.length)   
+
+    def test_water_stretcher(self):
+        aln = psa.stretcher(moltype='nucl', qseq='ATGCTAGATA', sseq='ATGCTAGTTA')
+        self.assertEqual(len(aln.qaln), len(aln.saln))
+        self.assertEqual(len(aln.qaln), aln.length)   
         
     def test_needle_protein(self):
         aln = psa.needle(moltype='prot', qseq='MERILIIMTGG', sseq='MEKILILM')
@@ -27,7 +33,12 @@ class Test(unittest.TestCase):
         self.assertEqual(len(aln.qaln), aln.length)
 
     def test_water_protein(self):
-        aln = psa.needle(moltype='prot', qseq='MERI', sseq='MEKILILM')
+        aln = psa.water(moltype='prot', qseq='MERI', sseq='MEKILILM')
+        self.assertEqual(len(aln.qaln), len(aln.saln))
+        self.assertEqual(len(aln.qaln), aln.length)
+
+    def test_stretcher_protein(self):
+        aln = psa.stretcher(moltype='prot', qseq='MERILIIMTGG', sseq='MEKILILM')
         self.assertEqual(len(aln.qaln), len(aln.saln))
         self.assertEqual(len(aln.qaln), aln.length)
 
