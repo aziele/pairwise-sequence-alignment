@@ -5,6 +5,8 @@ global/local alignment between a pair of sequences (query and subject).
 
 Copyright 2022 Andrzej Zielezinski (a.zielezinski@gmail.com)
 https://github.com/aziele/pairwise-sequence-alignment
+
+Adapted to also use stretcher based on needle.
 """
 
 from __future__ import annotations
@@ -14,7 +16,7 @@ import subprocess
 import shutil
 import random
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 # Check whether needle is on PATH and marked as executable.
 assert shutil.which('needle'), "needle not found (is emboss installed?)"
@@ -257,7 +259,7 @@ def align(
     )
 
 def emboss_run(
-        program: Literal['needle', 'water'],
+        program: Literal['needle', 'water', 'stretcher'],
         moltype: Literal['prot', 'nucl'],
         qseq: str,
         sseq: str,
@@ -387,3 +389,8 @@ def water(*args, **kwargs):
 def needle(*args, **kwargs):
     """Aligns two sequences using EMBOSS needle."""
     return align('needle', *args, **kwargs)
+
+
+def stretcher(*args, **kwargs):
+    """Aligns two sequences using EMBOSS stretcher."""
+    return align('stretcher', *args, **kwargs)
