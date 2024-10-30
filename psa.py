@@ -1,12 +1,12 @@
 """Global and local pairwise alignments between nucleotide/protein sequences.
 
-The module uses needle/water from the EMBOSS package to compute an optimal
-global/local alignment between a pair of sequences (query and subject).
+The module uses needle/strecher and water from the EMBOSS package to compute 
+an optimal global and local alignment between a pair of sequences (query and 
+subject).
 
 Copyright 2022 Andrzej Zielezinski (a.zielezinski@gmail.com)
 https://github.com/aziele/pairwise-sequence-alignment
 
-Adapted to also use stretcher based on needle.
 """
 
 from __future__ import annotations
