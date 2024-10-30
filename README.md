@@ -1,6 +1,6 @@
 # pairwise-sequence-alignment (psa)
 
-This is a Python module to calculate a pairwise alignment between biological sequences (protein or nucleic acid). This module uses the [needle](https://www.ebi.ac.uk/Tools/psa/emboss_needle/) and [water](https://www.ebi.ac.uk/Tools/psa/emboss_water/) tools from the EMBOSS package to calculate an optimal, global/local pairwise alignment.
+This is a Python module to calculate a pairwise alignment between biological sequences (protein or nucleic acid). This module uses the [needle](https://www.ebi.ac.uk/Tools/psa/emboss_needle/), [stretcher](https://www.ebi.ac.uk/jdispatcher/psa/emboss_stretcher) and [water](https://www.ebi.ac.uk/Tools/psa/emboss_water/) tools from the EMBOSS package to calculate an optimal, global/local pairwise alignment.
 
 I wrote this module for two reasons. First, the needle and water tools are faster than any Python implementation. Second, Biopython has dropped support for tools from the EMBOSS package and recommends running them via the subprocess module directly.
 
@@ -31,6 +31,7 @@ I wrote this module for two reasons. First, the needle and water tools are faste
 Pairwise sequence alignment is used to identify regions of similarity that may indicate functional, structural and/or evolutionary relationships between two sequences.
 
 1. Global alignment (*needle*; [the Needleman-Wunsch algorithm](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm)) aligns two sequences across their entire length, from beginning to end. It is most useful when sequences you are aligning are similar and roughly the same size.
+1a. *stretcher*; [explaination](https://galaxy-iuc.github.io/emboss-5.0-docs/stretcher.html) calculates a global alignment of two sequences using a modification of the classic dynamic programming algorithm which uses linear space. 
 2. Local alignment (*water*; [the Smith-Waterman algorithm](https://en.wikipedia.org/wiki/Smith–Waterman_algorithm)) finds the region with the highest level of similarity between the two sequences. It is suitable for sequences that are not assumed to be similar over the entire length.
 
 
