@@ -42,9 +42,20 @@ class Test(unittest.TestCase):
         self.assertEqual(len(aln.qaln), len(aln.saln))
         self.assertEqual(len(aln.qaln), aln.length)
 
-    def test_needle_dna_qid_sid(self):
+    def test_needle_dna_qid_sid_1(self):
         qid = 'dna1'
         sid = 'dna2'
+        qseq = 'ATGCTAGATA'
+        sseq = 'ATGCTAGTTA'
+        aln = psa.needle(moltype='nucl', qseq=qseq, sseq=sseq, qid=qid, sid=sid)
+        self.assertEqual(len(aln.qaln), len(aln.saln))
+        self.assertEqual(len(aln.qaln), aln.length)
+        self.assertEqual(aln.qid, qid)
+        self.assertEqual(aln.sid, sid)
+
+    def test_needle_dna_qid_sid_2(self):
+        qid = 'query1'
+        sid = 'query10'
         qseq = 'ATGCTAGATA'
         sseq = 'ATGCTAGTTA'
         aln = psa.needle(moltype='nucl', qseq=qseq, sseq=sseq, qid=qid, sid=sid)

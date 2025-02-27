@@ -16,7 +16,7 @@ import subprocess
 import shutil
 import random
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 # Check whether needle is on PATH and marked as executable.
 assert shutil.which('needle'), "needle not found (is emboss installed?)"
@@ -373,11 +373,11 @@ def emboss_parse(handle: Iterable[str]) -> namedtuple:
                 score = float(cols[2])
         # Parse alignment
         else:
-            if line.startswith(qid):
+            if line.startswith(f'{qid} '):
                 qaln.append(cols[2])
                 qpos.append(int(cols[1]))
                 qpos.append(int(cols[3]))
-            elif line.startswith(sid):
+            elif line.startswith(f'{sid} '):
                 saln.append(cols[2])
                 spos.append(int(cols[1]))
                 spos.append(int(cols[3]))
