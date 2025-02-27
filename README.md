@@ -1,6 +1,6 @@
 # pairwise-sequence-alignment (psa)
 
-![PyPI - Version](https://img.shields.io/pypi/v/pairwise-sequence-alignment)
+![PyPI - Version](https://img.shields.io/pypi/v/pairwise-sequence-alignment?label=version)
 
 This is a Python module to calculate a pairwise alignment between biological sequences (protein or nucleic acid). This module uses the [needle](https://www.ebi.ac.uk/Tools/psa/emboss_needle/), [stretcher](https://www.ebi.ac.uk/jdispatcher/psa/emboss_stretcher) and [water](https://www.ebi.ac.uk/Tools/psa/emboss_water/) tools from the EMBOSS package to calculate an optimal, global/local pairwise alignment.
 
@@ -33,8 +33,8 @@ I wrote this module for two reasons. First, the needle and water tools are faste
 Pairwise sequence alignment identifies regions of similarity between two sequences, which can indicate functional, structural, or evolutionary relationships.
 
 1. Global alignment aligns two sequences from start to finish, ideal for sequences that are similar and of comparable length.
-    * *needle* [Needleman-Wunsch algorithm](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm)) calculates a full-length global alignment by maximizing similarity across both sequences through a dynamic programming approach.
-    * *stretcher* [documentation](https://galaxy-iuc.github.io/emboss-5.0-docs/stretcher.html) performs global alignment using a modified dynamic programming algorithm optimized for linear space efficiency. 
+    * *needle* ([Needleman-Wunsch algorithm](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm)) calculates a full-length global alignment by maximizing similarity across both sequences through a dynamic programming approach.
+    * *stretcher* ([documentation](https://galaxy-iuc.github.io/emboss-5.0-docs/stretcher.html) performs global alignment using a modified dynamic programming algorithm optimized for linear space efficiency. 
 
 2. Local alignment (*water*; [Smith-Waterman algorithm](https://en.wikipedia.org/wiki/Smith–Waterman_algorithm)) finds the region with the highest level of similarity between the two sequences. It is suitable for sequences that are not assumed to be similar over the entire length.
 

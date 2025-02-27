@@ -4,7 +4,7 @@ The module uses needle/strecher and water from the EMBOSS package to compute
 an optimal global and local alignment between a pair of sequences (query and 
 subject).
 
-Copyright 2022 Andrzej Zielezinski (a.zielezinski@gmail.com)
+Copyright 2022-2025 Andrzej Zielezinski (a.zielezinski@gmail.com)
 https://github.com/aziele/pairwise-sequence-alignment
 
 """
@@ -16,14 +16,14 @@ import subprocess
 import shutil
 import random
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 # Check whether needle is on PATH and marked as executable.
 assert shutil.which('needle'), "needle not found (is emboss installed?)"
 
 
 class PairwiseAlignment():
-    """Object representing a pairwise ailgnment.
+    """Object representing a pairwise alignment.
 
     Attributes:
         qid          Query sequence identifier
@@ -125,7 +125,7 @@ class PairwiseAlignment():
         return (self.qend - self.qstart + 1) / self.qlen * 100
 
     def subject_coverage(self) -> float:
-        """Query coverage"""
+        """Subject coverage"""
         return (self.send - self.sstart + 1) / self.slen * 100
 
     def fasta(self, wrap=70) -> str:
@@ -194,14 +194,14 @@ SimpleAlignment = namedtuple(
 )
 
 def align(
-        program: Literal['needle', 'water'],
+        program: Literal['needle', 'water', 'stretcher'],
         moltype: Literal['prot', 'nucl'],
         qseq: str,
         sseq: str,
         qid: str = 'query',
         sid: str = 'subject',
-        gapopen: int = 10,
-        gapextend: int = 0.5,
+        gapopen: Optional[int] = None,
+        gapextend: Optional[float] = None,
         matrix: Optional[str] = None
         ) -> PairwiseAlignment:
     """Aligns two sequences, parses the output, and returns an alignment object.
@@ -213,15 +213,30 @@ def align(
         sseq      Subject sequence
         qid       Query sequence identifier
         sid       Subject sequence identifier
-        gapopen   Gap open penalty
-        gapextend Gap extension penalty
+        gapopen   Gap open penalty (if None, defaults are used)
+        gapextend Gap extension penalty (if None, defaults are used)
         matrix    Name of scoring matrix
 
     Returns:
-        A list of lines from EMBOSS output
+        A PairwiseAlignment object.
     """
+
+    # Define default penalties
+    default_penalties = {
+        'needle': {'prot': (10, 0.5), 'nucl': (10, 0.5)},
+        'water': {'prot': (10, 0.5), 'nucl': (10, 0.5)},
+        'stretcher': {'prot': (12, 2), 'nucl': (16, 4)}
+    }
+
+    # Assign default values if not provided
+    if gapopen is None:
+        gapopen = default_penalties[program][moltype][0]
+    if gapextend is None:
+        gapextend = default_penalties[program][moltype][1]
+
     if not matrix:
         matrix = 'EBLOSUM62' if moltype == 'prot' else 'EDNAFULL'
+
     handle = emboss_run(
         program=program,
         moltype=moltype,
@@ -257,6 +272,7 @@ def align(
         matrix=matrix,
         raw=aln.output
     )
+
 
 def emboss_run(
         program: Literal['needle', 'water', 'stretcher'],
@@ -299,6 +315,7 @@ def emboss_run(
         f"-datafile {matrix}",
         f"-gapopen {gapopen}",
         f"-gapextend {gapextend}",
+        "-aformat pair",
     ]
     process = subprocess.run(
         " ".join(cmd),
@@ -311,7 +328,7 @@ def emboss_run(
     return process.stdout.splitlines()
 
 
-def emboss_parse(handle: Iterable[str]) -> collections.namedtuple:
+def emboss_parse(handle: Iterable[str]) -> namedtuple:
     """Parses EMBOSS output.
 
     Args:

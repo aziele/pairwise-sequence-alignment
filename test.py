@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
         self.assertEqual(len(aln.qaln), len(aln.saln))
         self.assertEqual(len(aln.qaln), aln.length)   
 
-    def test_water_stretcher(self):
+    def test_stretcher_dna(self):
         aln = psa.stretcher(moltype='nucl', qseq='ATGCTAGATA', sseq='ATGCTAGTTA')
         self.assertEqual(len(aln.qaln), len(aln.saln))
         self.assertEqual(len(aln.qaln), aln.length)   
